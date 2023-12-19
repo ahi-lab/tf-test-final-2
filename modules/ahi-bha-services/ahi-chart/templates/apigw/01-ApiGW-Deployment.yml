@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigw-deployment
+  namespace: {{ include "ahi-chart.namespace" . }}
+  labels:
+    app: apigw
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigw
+
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: apigw
+    spec:
+      containers:
+        - name: apigw
+          image: {{ .Values.ahi.apigw.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8083
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: cloud
+            - name: api-key-name
+              valueFrom:
+                secretKeyRef:
+                  name: api-key-secret
+                  key: api-key-name
+            - name: api-key-value
+              valueFrom:
+                secretKeyRef:
+                  name: api-key-secret
+                  key: api-key-value
+          resources:
+            requests:
+              memory: {{.Values.ahi.apigw.memory }}
+      nodeSelector:
+        app: system-apps

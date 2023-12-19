@@ -1,0 +1,24 @@
+namespace: app-api-uat
+
+ahi:
+  apigw:
+    image: samuelest/apigw:1.14
+    memory: 576Mi
+    ingress:
+      host: api-uat.az1-ahi-int.com
+  eureka:
+    image: samuelest/eureka-server:1.14
+    memory: 576Mi
+  pactbroker:
+    image: pactfoundation/pact-broker:latest
+    memory: 576Mi
+    ingress:
+      host: pact-uat.az1-ahi-int.com
+  api:
+    image: samuelest/bha-backend-api:1.14
+    memory: 576Mi
+    dataSource:
+      database: dGthaGlkYg==
+      uri: aHR0cHM6Ly9haGktYmhhLWNvc21vcy1kZXYuZG9jdW1lbnRzLmF6dXJlLmNvbTo0NDMv
+      key: TTRWNXJXWHpBZFl2MFQzaDA2Y0JNSXQ0a0VmYlhNaTR2VWU0d2x4YjFUMlN0OTcybVA3YVpuOGNZcmV1ZkpWdG4wZXpCSHp4YWlsVEFDRGJJVDFQdWc9PQ==
+           

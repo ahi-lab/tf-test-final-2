@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-api-deployment
+  namespace: {{ include "ahi-chart.namespace" . }}
+  labels:
+    app: backend-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-api
+
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: backend-api
+    spec:
+      containers:
+        - name: backend-api
+          image: {{.Values.ahi.api.image}}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: cloud
+            - name: database
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: database
+            - name: uri
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: uri                  
+            - name: key
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: key
+          resources:
+            requests:
+              memory: {{.Values.ahi.api.memory }}
+      nodeSelector:
+        app: system-apps

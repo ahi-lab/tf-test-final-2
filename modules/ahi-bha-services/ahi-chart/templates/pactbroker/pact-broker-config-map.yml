@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pact-broker-config
+  namespace: {{ include "ahi-chart.namespace" . }}
+  labels:
+    app: pact-broker
+data:
+  # driver://username:password@host:port/database
+  PACT_BROKER_DATABASE_URL: "postgres://postgresadmin:admin123@postgres:5432/postgres"
+  PACT_BROKER_DATABASE_CLEAN_ENABLED: "false"
+  PACT_BROKER_DATABASE_CLEAN_CRON_SCHEDULE: "* * * * *"
+  PACT_BROKER_DATABASE_CLEAN_DRY_RUN: "false"
+  PACT_BROKER_DATABASE_CLEAN_DELETION_LIMIT: "500"
+  PACT_BROKER_SQL_LOG_WARN_DURATION: "60"
+  # Keep all prod versions, AND the latest version for every pacticipant/tag, and all versions less than 30 days old
+  PACT_BROKER_DATABASE_CLEAN_KEEP_VERSION_SELECTORS: '[{"latest": true, "tag": true}, {"max_age": 30}]'
+  PACT_BROKER_DATABASE_CONNECT_MAX_RETRIES: "10"
+  PORT: '9292'
+  PACT_BROKER_LOG_LEVEL: INFO
+  PACT_BROKER_SQL_LOG_LEVEL: DEBUG
+  PACT_BROKER_BASIC_AUTH_USERNAME: "basic_auth_user"
+  PACT_BROKER_BASIC_AUTH_PASSWORD: "basic_auth_password"
+  PACT_BROKER_BASIC_AUTH_READ_ONLY_USERNAME: "readonly_user"
+  PACT_BROKER_BASIC_AUTH_READ_ONLY_PASSWORD: "readonly_password"
+  # PACT_BROKER_BASE_URL: 'http://192.168.64.2:31401'

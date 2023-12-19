@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pact-broker-deployment
+  namespace: {{ include "ahi-chart.namespace" . }}
+  labels:
+    app: pact-broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pact-broker
+  template:
+    metadata:
+      labels:
+        app: pact-broker
+    spec:
+      containers:
+        - name: pact-broker
+          # image: pactfoundation/pact-broker:2.86.0.1
+          image: {{.Values.ahi.pactbroker.image }}
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 9292
+          envFrom:
+            - configMapRef:
+                name: pact-broker-config
+          resources:
+            requests:
+              memory: {{.Values.ahi.pactbroker.memory }}             
+      restartPolicy: Always
+

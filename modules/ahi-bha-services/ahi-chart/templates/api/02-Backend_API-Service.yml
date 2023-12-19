@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bha-backend-api
+  namespace: {{ include "ahi-chart.namespace" . }}
+  labels:
+    app: backend-api
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-api
+  ports:
+    - port: 8080
+      targetPort: 8080
